@@ -302,9 +302,9 @@ always_ff @(posedge clock) begin
   end
   else begin
     if( ce ) begin
-      data_out <= mem[addr];
+      data_out <= mem[address];
       if( we ) begin
-        mem[addr] <= data_in;
+        mem[address] <= data_in;
       end
     end
   end
