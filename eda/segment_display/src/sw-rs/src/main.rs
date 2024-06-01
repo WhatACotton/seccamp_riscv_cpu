@@ -1,12 +1,11 @@
 #![no_std]
 #![no_main]
 
-use core::{arch::{global_asm, asm}, panic::PanicInfo, sync::atomic::{compiler_fence, Ordering}, cell::RefCell};
+use core::{arch::global_asm, panic::PanicInfo, sync::atomic::{compiler_fence, Ordering}, cell::RefCell};
 use bootrom_pac;
 
 mod uart;
 use uart::{Uart, UartReader, UartWriter};
-use core::fmt::Write;
 use fwtool::server::{Server, ServerHandler};
 
 
