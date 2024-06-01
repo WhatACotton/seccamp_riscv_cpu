@@ -7,7 +7,7 @@
 package fpga
 
 import chisel3._
-import cpu.TopWithSegmentLed
+import cpu.{TopWithSegmentLed, TopWithStepper}
 import chisel3.stage.ChiselStage
 
 object Elaborate_TangNanoPmod_SegmentLed extends App {
@@ -15,6 +15,15 @@ object Elaborate_TangNanoPmod_SegmentLed extends App {
   val memorySize = args(1).toInt
   val bootromDir = args(2)
   (new ChiselStage).emitVerilog(new TopWithSegmentLed(memoryPathGen = i => f"${bootromDir}/bootrom_${i}.hex", memorySize = memorySize, forSimulation = false, enableProbe = false, useTargetPrimitive = true), Array(
+    "--target-dir", directory,
+  ))
+}
+
+object Elaborate_TangNanoPmod_Stepper extends App {
+  val directory = args(0)
+  val memorySize = args(1).toInt
+  val bootromDir = args(2)
+  (new ChiselStage).emitVerilog(new TopWithStepper(memoryPathGen = i => f"${bootromDir}/bootrom_${i}.hex", memorySize = memorySize, forSimulation = false, enableProbe = false, useTargetPrimitive = true), Array(
     "--target-dir", directory,
   ))
 }
