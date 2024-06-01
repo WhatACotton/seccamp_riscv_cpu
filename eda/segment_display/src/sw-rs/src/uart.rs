@@ -115,7 +115,7 @@ impl<'a> no_std_io::io::Read for UartReader<'a, bootrom_pac::UART> {
                 Err(embedded_hal_nb::nb::Error::WouldBlock) => {
                     break;
                 },
-                Err(err) => {
+                Err(_err) => {
                     return Err(no_std_io::io::Error::from(no_std_io::io::ErrorKind::Other));
                 },
             }
@@ -130,13 +130,13 @@ impl<'a> no_std_io::io::Write for UartWriter<'a, bootrom_pac::UART> {
         let mut count = 0;
         for b in buf.iter() {
             match self.uart.borrow_mut().write(*b) {
-                Ok(v) => {
+                Ok(_v) => {
                     count += 1;
                 },
                 Err(embedded_hal_nb::nb::Error::WouldBlock) => {
                     break;
                 },
-                Err(err) => {
+                Err(_err) => {
                     return Err(no_std_io::io::Error::from(no_std_io::io::ErrorKind::Other));
                 },
             }

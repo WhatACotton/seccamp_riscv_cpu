@@ -1,5 +1,5 @@
 use crate::frame::{FrameHeader, FrameError, RawFrame};
-use no_std_io::io::{Read, Write};
+use no_std_io::io::Read;
 
 pub struct Receiver<const MAX_PAYLOAD_WITH_CRC_SIZE: usize> {
     state: State,
