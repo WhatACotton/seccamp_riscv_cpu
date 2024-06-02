@@ -4,7 +4,7 @@ TARGET ?= tangnano9k_pmod
 CHISEL_TEMPLATE_DIR ?= ../../external/riscv-chisel-book/chisel-template
 ROOT_DIR ?= $(abspath ../..)
 RTL_DIR ?= $(ROOT_DIR)/rtl
-CHISEL_DESIGN_DIR ?= $(ROOT_DIR)/src/main/scala
+CHISEL_DESIGN_DIR ?= $(ROOT_DIR)/cpu_design/src/main/scala
 CHISEL_DESIGN_SRCS := $(shell find $(CHISEL_DESIGN_DIR) -name "*.scala")
 
 BOOTROM_HEX ?= src/sw/bootrom.hex
@@ -14,7 +14,7 @@ RISCV_ELABORATE := fpga.Elaborate_TangNanoPmod_SegmentLed
 RISCV_TEST := cpu.TopWithSegmentLedTest
 RISCV_ELABORATE_OUTPUT_DIR := src/$(TARGET)/chisel_output
 
-RISCV_CORE_SRC := $(RISCV_ELABORATE_OUTPUT_DIR)/TopWithSegmentLed.v
+RISCV_CORE_SRC := $(RISCV_ELABORATE_OUTPUT_DIR)/TopWithSegmentLed.sv
 PROJECT_ADDITIONAL_ARGS := $(abspath $(RISCV_CORE_SRC))
 PROJECT_ADDITIONAL_CLEAN := src/$(TARGET)/chisel_output/*
 
@@ -50,11 +50,11 @@ src/$(TARGET)/pins.cst:
 endif
 
 $(RISCV_CORE_SRC): $(CHISEL_DESIGN_SRCS)
-	cd $(ROOT_DIR) && sbt "project root; runMain $(RISCV_ELABORATE) $(dir $(abspath $@)) 8192 $(abspath src/sw) "
+	cd $(ROOT_DIR) && sbt "project cpu_design; runMain $(RISCV_ELABORATE) $(dir $(abspath $@)) 8192 $(abspath src/sw) "
 
 .PHONY: test
 test: $(CHISEL_DESIGN_SRCS) src/sw/bootrom.hex
-	cd $(ROOT_DIR) && sbt "project root; testOnly $(RISCV_TEST) -- -DwriteVcd=1"
+	cd $(ROOT_DIR) && sbt "project cpu_design; testOnly $(RISCV_TEST) -- -DwriteVcd=1"
 
 .PHONY: show
 show:

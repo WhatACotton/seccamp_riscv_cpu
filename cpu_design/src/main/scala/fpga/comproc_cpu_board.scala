@@ -7,26 +7,26 @@
 package fpga
 
 import chisel3._
-import chisel3.stage.ChiselStage
+import _root_.circt.stage.ChiselStage
 import cpu.Top
 import cpu.TopWithHDMI
 
 object Elaborate_ComProcCpuBoard extends App {
-  (new ChiselStage).emitVerilog(new Top, Array(
+  ChiselStage.emitSystemVerilogFile(new Top, Array(
     "-o", "riscv.v",
     "--target-dir", "rtl/comproc_cpu_board",
   ))
 }
 
 object Elaborate_ComProcCpuBoard_RustBootrom extends App {
-  (new ChiselStage).emitVerilog(new Top(i =>  f"../sw-rs/bootrom-rs_${i}.hex"), Array(
+  ChiselStage.emitSystemVerilogFile(new Top(i =>  f"../sw-rs/bootrom-rs_${i}.hex"), Array(
     "-o", "riscv.v",
     "--target-dir", "rtl/comproc_cpu_board",
   ))
 }
 
 object Elaborate_ComProcCpuBoard_HDMI extends App {
-  (new ChiselStage).emitVerilog(new TopWithHDMI, Array(
+  ChiselStage.emitSystemVerilogFile(new TopWithHDMI, Array(
     "-o", "riscv.v",
     "--target-dir", "rtl/comproc_cpu_board_hdmi",
   ))

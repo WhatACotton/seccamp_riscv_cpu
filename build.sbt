@@ -1,13 +1,13 @@
 // See README.md for license details.
 
-ThisBuild / scalaVersion     := "2.13.8"
+ThisBuild / scalaVersion     := "2.13.12"
 ThisBuild / version          := "0.1.0"
 ThisBuild / organization     := "%ORGANIZATION%"
 
 lazy val commonSettings = Seq (
   libraryDependencies ++= Seq(
-    "edu.berkeley.cs" %% "chisel3" % "3.5.4",
-    "edu.berkeley.cs" %% "chiseltest" % "0.5.4" % "test"
+    "org.chipsalliance" %% "chisel" % "6.2.0",
+    "org.scalatest" %% "scalatest" % "3.2.16" % "test"
   ),
   scalacOptions ++= Seq(
     "-language:reflectiveCalls",
@@ -16,7 +16,7 @@ lazy val commonSettings = Seq (
     "-Xcheckinit",
     "-Ymacro-annotations"
   ),
-  addCompilerPlugin("edu.berkeley.cs" % "chisel3-plugin" % "3.5.4" cross CrossVersion.full),
+  addCompilerPlugin("org.chipsalliance" % "chisel-plugin" % "6.2.0" cross CrossVersion.full),
 )
 
 lazy val fpga_samples = (project in file("./external/fpga_samples/chisel")).

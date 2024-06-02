@@ -3,3 +3,4 @@ testbench
 riscv.v
 pins.cst
 chisel_output
+run-*

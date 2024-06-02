@@ -7,6 +7,12 @@ set PROJECT_NAME  [lindex $argv 5]
 # Additional args
 set RISCV_CORE_SRC  [lindex $argv 6]
 
+set DEVICE_VERSION "NA"
+if {${DEVICE_FAMILY} == "GW1NR-9C"} {
+    set DEVICE_VERSION "C"
+}
+#create_project -name ${PROJECT_NAME} -pn ${DEVICE_PART} -device_version ${DEVICE_VERSION}
+
 set_option -output_base_name ${PROJECT_NAME}
 set_device -name $DEVICE_FAMILY $DEVICE_PART
 

@@ -15,6 +15,15 @@ class Core(startAddress: UInt = START_ADDR, suppressDebugMessage: Boolean = fals
       val success = Output(Bool())
       val exit = Output(Bool())
       val debug_pc = Output(UInt(WORD_LEN.W))
+      val debug_if_inst = Output(UInt(WORD_LEN.W))
+      // val debug_id_inst = Output(UInt(WORD_LEN.W))
+      // val debug_id_pc = Output(UInt(WORD_LEN.W))
+      // val debug_id_op2_sel = Output(UInt(WORD_LEN.W))
+      // val debug_id_op2_data = Output(UInt(WORD_LEN.W))
+      // val debug_exe_pc = Output(UInt(WORD_LEN.W))
+      // val debug_exe_reg_exe_fun = Output(UInt(WORD_LEN.W))
+      // val debug_exe_reg_op2_data = Output(UInt(WORD_LEN.W))
+      // val debug_mem_pc = Output(UInt(WORD_LEN.W))
     }
   )
 
@@ -370,7 +379,7 @@ class Core(startAddress: UInt = START_ADDR, suppressDebugMessage: Boolean = fals
   mem_stall_flg := io.dmem.ren && !io.dmem.rvalid
 
   // CSR
-  val csr_rdata = MuxLookup(mem_reg_csr_addr, 0.U(WORD_LEN.W), Seq(
+  val csr_rdata = MuxLookup(mem_reg_csr_addr, 0.U(WORD_LEN.W))(Seq(
     CSR_CUSTOM_GPIO.U -> csr_gpio_out,
     CSR_ADDR_MSTATUS -> csr_mstatus.toMStatusL(),
     CSR_ADDR_MISA -> 0.U,
@@ -452,6 +461,16 @@ class Core(startAddress: UInt = START_ADDR, suppressDebugMessage: Boolean = fals
   io.success := successDetected
   io.exit := if_inst === ECALL
   io.debug_pc := if_reg_pc
+  io.debug_if_inst := if_inst
+  // io.debug_id_inst := id_inst
+  // io.debug_id_pc := id_reg_pc
+  // io.debug_id_op2_sel := id_op2_sel
+  // io.debug_id_op2_data := id_op2_data
+  // io.debug_exe_pc := exe_reg_pc
+  // io.debug_exe_reg_exe_fun := exe_reg_exe_fun
+  // io.debug_exe_reg_op2_data := exe_reg_op2_data
+  // io.debug_mem_pc := mem_reg_pc
+
   if( !suppressDebugMessage ) {
     printf(p"if_reg_pc        : 0x${Hexadecimal(if_reg_pc)}\n")
     printf(p"id_reg_pc        : 0x${Hexadecimal(id_reg_pc)}\n")
