@@ -16,7 +16,7 @@ class Gpio() extends Module {
   
   io.mem.rdata := "xdeadbeef".U
   io.mem.rvalid := true.B
-  io.mem.rdata := MuxLookup(io.mem.addr(3, 2), "xDEADBEEF".U, Seq(
+  io.mem.rdata := MuxLookup(io.mem.addr(3, 2), "xDEADBEEF".U)(Seq(
       0.U -> out, // Output
   ))
   when(io.mem.wen) {
@@ -45,7 +45,7 @@ class GpioArray(masks: Seq[BigInt]) extends Module {
   val inReg = RegInit(VecInit(masks.map(_ => 0.U(32.W))))
   
   io.mem.rvalid := true.B
-  io.mem.rdata := MuxLookup(io.mem.addr(ADDRESS_BITS - 1, 2), "xDEADBEEF".U, masks.zipWithIndex.flatMap { 
+  io.mem.rdata := MuxLookup(io.mem.addr(ADDRESS_BITS - 1, 2), "xDEADBEEF".U)(masks.zipWithIndex.flatMap { 
     case (m, i) => Seq(
       (i * REGISTERS_PER_GPIO + 0).U -> (outReg(i) & m.U),
       (i * REGISTERS_PER_GPIO + 1).U -> (inReg(i) & m.U),

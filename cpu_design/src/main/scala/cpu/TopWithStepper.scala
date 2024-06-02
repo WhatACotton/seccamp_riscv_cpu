@@ -10,7 +10,7 @@ import display.MatrixLed
 import display.MatrixLedConfig
 import uart.UartRx
 
-class TopWithSegmentLed(memoryPathGen: Int => String = i => f"../sw/bootrom_${i}.hex", suppressDebugMessage: Boolean = false, memorySize: Int = 8192, enableProbe: Boolean = false, forSimulation: Boolean = false, useTargetPrimitive: Boolean = false) extends Module {
+class TopWithStepper(memoryPathGen: Int => String = i => f"../sw/bootrom_${i}.hex", suppressDebugMessage: Boolean = false, memorySize: Int = 8192, enableProbe: Boolean = false, forSimulation: Boolean = false, useTargetPrimitive: Boolean = true) extends Module {
   val io = IO(new Bundle {
     val debug_pc = Output(UInt(WORD_LEN.W))
     val uartTx = Output(Bool())
@@ -20,8 +20,8 @@ class TopWithSegmentLed(memoryPathGen: Int => String = i => f"../sw/bootrom_${i}
     val digitSelector = ShiftRegisterPort()
     val ledOut = Output(UInt(32.W))
     val switchIn = Input(UInt(32.W))
-    val matrixColumnOut = Output(UInt(8.W))
-    val matrixRowOut = Output(UInt(8.W))
+    val stepperCount = Output(UInt(32.W))
+    val stepperCwCcw = Output(UInt(1.W))
     val probeOut = Output(Bool())
     val exit = Output(Bool())
   })
@@ -36,7 +36,7 @@ class TopWithSegmentLed(memoryPathGen: Int => String = i => f"../sw/bootrom_${i}
 
   val decoder = Module(new DMemDecoder(Seq(
     (BigInt(0x00000000L), BigInt(memorySize)),         // メモリ
-    (BigInt(0xA0000000L), gpios.ADDRESS_RANGE),     // GPIO Array (5ポート)
+    (BigInt(0xA0000000L), gpios.ADDRESS_RANGE),     // GPIO Array (6ポート)
     (BigInt(0xA0001000L), uartRegs.ADDRESS_RANGE),  // UART IO
   )))
   core.io.imem <> memory.io.imem
@@ -54,13 +54,15 @@ class TopWithSegmentLed(memoryPathGen: Int => String = i => f"../sw/bootrom_${i}
   gpios.io.in(0) := 0.U
   gpios.io.in(1) := 0.U
 
-  // GPIO port 2, 3 にLEDマトリクス用のドライバを接続
-  val matrixLed = Module(new MatrixLed(new MatrixLedConfig(rows = 8, columns = 8, clockFreq = clockFreqHz, refreshInterval = 2700, refreshGuardInterval = 10)))
-  matrixLed.io.matrix := VecInit((0 to 3).map(i => gpios.io.out(2)(8 * i + 7, 8 * i)) ++ (0 to 3).map(i => gpios.io.out(3)(8 * i + 7, 8 * i)))
-  io.matrixColumnOut := matrixLed.io.column
-  io.matrixRowOut := matrixLed.io.row
-  gpios.io.in(2) := 0.U
-  gpios.io.in(3) := 0.U
+  // GPIO port 2, 3 にステッピングモータドライバを接続
+  val stepperCount = RegInit((clockFreqHz / 500).U(32.W))
+  val stepperCwCcw = RegInit(0.U(1.W))
+  stepperCount := gpios.io.out(2)
+  stepperCwCcw := gpios.io.out(3)(0)
+  gpios.io.in(2) := stepperCount
+  gpios.io.in(3) := Cat(0.U(31.W), stepperCwCcw)
+  io.stepperCount := stepperCount
+  io.stepperCwCcw := stepperCwCcw
 
   // GPIO port 4にLED用のドライバを接続
   io.ledOut := gpios.io.out(4)
@@ -95,7 +97,7 @@ class TopWithSegmentLed(memoryPathGen: Int => String = i => f"../sw/bootrom_${i}
   // 信号観測用プローブを構築
   if( enableProbe ) {
     val probe = Module(new diag.Probe(new diag.ProbeConfig(bufferDepth = 512, triggerPosition = 512 - 16), 65))
-    probe.io.in := Cat( core.io.imem.valid, core.io.debug_if_inst, core.io.debug_pc )
+    probe.io.in := Cat( core.io.imem.valid, core.io.imem.addr, core.io.imem.inst )
     val noActivityCounter = RegInit(0.U(log2Ceil(256).W))
     when( gpios.io.mem.wen ) {
       noActivityCounter := 0.U

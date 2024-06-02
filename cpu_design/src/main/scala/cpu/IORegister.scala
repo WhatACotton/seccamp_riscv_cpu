@@ -15,7 +15,7 @@ class IORegister(masks: Seq[(BigInt, BigInt)]) extends Module {
   val ADDRESS_RANGE = BigInt(masks.length * ADDRESS_RANGE_PER_GPIO)
   val ADDRESS_BITS = log2Ceil(ADDRESS_RANGE)
   
-  val inSignals = MuxLookup(io.mem.addr(ADDRESS_BITS - 1, 2), Cat(false.B, "xDEADBEEF".U), masks.zipWithIndex.flatMap { 
+  val inSignals = MuxLookup(io.mem.addr(ADDRESS_BITS - 1, 2), Cat(false.B, "xDEADBEEF".U))(masks.zipWithIndex.flatMap { 
     case (m, i) => Seq(
       i.U -> Cat(io.in(i).valid, (io.in(i).bits & m._1.U)),
     ) 

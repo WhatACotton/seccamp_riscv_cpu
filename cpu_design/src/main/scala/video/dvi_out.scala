@@ -88,7 +88,7 @@ class DviOut extends Module {
     
     def transitionMaximized(in: UInt): UInt = {
         assert(in.getWidth == 2)
-        MuxLookup(in, 0.U(10.W), Seq(
+        MuxLookup(in, 0.U(10.W))(Seq(
             "b00".U -> "b1101010100".U,
             "b01".U -> "b0010101011".U,
             "b10".U -> "b0101010100".U,
