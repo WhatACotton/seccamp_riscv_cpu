@@ -1,6 +1,6 @@
 PROJECT_NAME := cpu_riscv_chisel_book
 
-TARGET ?= comprocboard_9k
+TARGET ?= tangnano9k_pmod
 CHISEL_TEMPLATE_DIR ?= ../../external/riscv-chisel-book/chisel-template
 ROOT_DIR ?= $(abspath ../..)
 RTL_DIR ?= $(ROOT_DIR)/rtl
