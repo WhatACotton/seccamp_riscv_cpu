@@ -7,10 +7,32 @@
 package fpga
 
 import chisel3._
-import cpu.{TopWithSegmentLed, TopWithStepper}
+import cpu.{Top, TopWithHDMI, TopWithSegmentLed, TopWithStepper}
 import _root_.circt.stage.ChiselStage
 
-object Elaborate_TangNanoPmod_SegmentLed extends App {
+object Elaborate_Minimal extends App {
+  val directory = args(0)
+  val memorySize = args(1).toInt
+  val bootromDir = args(2)
+  ChiselStage.emitSystemVerilogFile(
+    new Top(memoryPathGen = i => f"${bootromDir}/bootrom_${i}.hex"), 
+    Array("--target-dir", directory),
+    Array("--lowering-options=disallowLocalVariables")
+  )
+}
+
+object Elaborate_HDMI extends App {
+  val directory = args(0)
+  val memorySize = args(1).toInt
+  val bootromDir = args(2)
+  ChiselStage.emitSystemVerilogFile(
+    new TopWithHDMI(memoryPathGen = i => f"${bootromDir}/bootrom_${i}.hex"), 
+    Array("--target-dir", directory),
+    Array("--lowering-options=disallowLocalVariables")
+  )
+}
+
+object Elaborate_SegmentLed extends App {
   val directory = args(0)
   val memorySize = args(1).toInt
   val bootromDir = args(2)
@@ -21,7 +43,7 @@ object Elaborate_TangNanoPmod_SegmentLed extends App {
   )
 }
 
-object Elaborate_TangNanoPmod_Stepper extends App {
+object Elaborate_Stepper extends App {
   val directory = args(0)
   val memorySize = args(1).toInt
   val bootromDir = args(2)

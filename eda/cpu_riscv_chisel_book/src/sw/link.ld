@@ -40,5 +40,5 @@ SECTIONS
   PROVIDE(stack_bottom = .);
   PROVIDE(_end = .);
   PROVIDE(end = .);
-  PROVIDE(stack_top = ORIGIN(mem) + LENGTH(mem) - 4);
+  PROVIDE(ramend = ORIGIN(mem) + LENGTH(mem));
 }

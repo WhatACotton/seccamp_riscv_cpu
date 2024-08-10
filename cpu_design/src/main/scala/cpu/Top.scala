@@ -9,10 +9,12 @@ class Top(memoryPathGen: Int => String = i => f"../sw/bootrom_${i}.hex", suppres
   val io = IO(new Bundle {
     val debug_pc = Output(UInt(WORD_LEN.W))
     val gpio_out = Output(UInt(32.W))
-    val uart_tx = Output(Bool())
+    //val uart_tx = Output(Bool())
     val success = Output(Bool())
     val exit = Output(Bool())
   })
+
+  val clockFreqHz = 27000000
   val baseAddress = BigInt("00000000", 16)
   val memSize = 8192
   val core = Module(new Core(startAddress = baseAddress.U(WORD_LEN.W), suppressDebugMessage))
@@ -30,9 +32,10 @@ class Top(memoryPathGen: Int => String = i => f"../sw/bootrom_${i}.hex", suppres
   decoder.io.targets(1) <> gpio.io.mem    // 1番ポートにGPIOを接続
   io.gpio_out := gpio.io.out  // GPIOの出力を外部ポートに接続
   //io.gpio_out := core.io.gpio_out  // GPIO CSRの出力を外部ポートに接続
-
-  val uartTx = Module(new UartTx(27000000, 115200))
-  io.uart_tx := uartTx.io.tx
+  
+  core.io.interrupt_in := false.B
+  // val uartTx = Module(new UartTx(8, clockFreqHz / 115200))
+  // io.uart_tx := uartTx.io.tx
 
   io.success := core.io.success
   io.exit := core.io.exit

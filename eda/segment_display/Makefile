@@ -10,7 +10,7 @@ CHISEL_DESIGN_SRCS := $(shell find $(CHISEL_DESIGN_DIR) -name "*.scala")
 BOOTROM_HEX ?= src/sw/bootrom.hex
 #BOOTROM_HEX ?= src/sw-rs/bootrom.hex
 
-RISCV_ELABORATE := fpga.Elaborate_TangNanoPmod_SegmentLed 
+RISCV_ELABORATE := fpga.Elaborate_SegmentLed 
 RISCV_TEST := cpu.TopWithSegmentLedTest
 RISCV_ELABORATE_OUTPUT_DIR := src/$(TARGET)/chisel_output
 
