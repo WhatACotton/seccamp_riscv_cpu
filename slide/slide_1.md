@@ -4,11 +4,11 @@ theme: default
 size: 16:9
 paginate: true
 headingDivider: 2
-header: セキュリティキャンプ2023 Y2 RISC-V CPU自作ゼミ
-footer: (C) 2022-2023 Kenta Ida
+header: セキュリティキャンプ2024 S02 FPGAを用いたRISC-V CPU自作ゼミ
+footer: (C) 2022-2024 Kenta Ida
 ---
 
-# セキュリティキャンプ2023 Y2 <br/> RISC-V CPU自作ゼミ
+# セキュリティキャンプ2024 S02 <br/>FPGAを用いたRISC-V CPU自作ゼミ
 
 <!--
 _class: lead
@@ -176,7 +176,7 @@ import chisel3._
 import chisel3.stage.ChiselStage
 import cpu.Top
 
-object Elaborate_ComProcCpuBoard extends App {
+object Elaborate_Minimal extends App {
   (new ChiselStage).emitVerilog(new Top, Array(
     "-o", "riscv.v",
     "--target-dir", "rtl/comproc_cpu_board",
@@ -190,9 +190,9 @@ object Elaborate_ComProcCpuBoard extends App {
 
 ```shell
 $ sbt
-sbt:riscv_chisel_book> runMain fpga.Elaborate_ComProcCpuBoard
+sbt:riscv_chisel_book> runMain fpga.Elaborate_Minimal
 [info] compiling 6 Scala sources to /home/kenta/repos/seccamp_2022_y4_riscv/fpga_impl/target/scala-2.12/classes ...
-[info] running fpga.Elaborate_ComProcCpuBoard 
+[info] running fpga.Elaborate_Minimal 
 Elaborating design...
 Done elaborating.
 ```
