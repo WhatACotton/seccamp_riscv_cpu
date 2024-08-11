@@ -22,7 +22,7 @@ class VideoController(videoParams: VideoParams, vramPixelBits: Int, magnificatio
     val memWordAddr = io.mem.addr >> 2
 
     // VRAMへはワードアクセスのみ許可 (バイトオフセットは無視)
-    val rdata = RegNext(vram(memWordAddr), 0.U)
+    val rdata = RegNext(Mux(io.mem.wen, io.mem.wdata, vram(memWordAddr)), 0.U)
     val rvalid = RegInit(false.B)
     io.mem.rvalid := rvalid
     io.mem.rdata := rdata

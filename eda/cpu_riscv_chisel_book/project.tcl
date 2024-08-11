@@ -33,4 +33,6 @@ add_file -type verilog [file normalize ${SRC_DIR}/reset_seq.sv]
 add_file -type cst [file normalize ${SRC_DIR}/pins.cst]
 add_file -type sdc [file normalize ${SRC_DIR}/timing.sdc]
 
+set_option -top_module top
+
 run all

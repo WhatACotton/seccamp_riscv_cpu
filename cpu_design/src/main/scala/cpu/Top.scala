@@ -23,7 +23,7 @@ class Top(memoryPathGen: Int => String = i => f"../sw/bootrom_${i}.hex", suppres
     (BigInt(0xA0000000L), BigInt(64)),      // GPIO
   )))
   
-  val memory = Module(new Memory(Some(memoryPathGen), baseAddress.U(WORD_LEN.W), memSize))
+  val memory = Module(new Memory(Some(memoryPathGen), baseAddress.U(WORD_LEN.W), memSize, useTargetPrimitive = false))
   val gpio = Module(new Gpio)
 
   core.io.imem <> memory.io.imem

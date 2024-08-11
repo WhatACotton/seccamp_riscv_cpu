@@ -49,9 +49,11 @@ class TopWithHDMI(memoryPathGen: Int => String = i => f"../sw/bootrom_${i}.hex",
   io.gpio_out := gpio.io.out  // GPIOの出力を外部ポートに接続
   //io.gpio_out := core.io.gpio_out  // GPIO CSRの出力を外部ポートに接続
 
-  val uartTx = Module(new UartTx(8, clockFreqHz / 115200))
-  io.uart_tx := uartTx.io.tx
+  // val uartTx = Module(new UartTx(8, clockFreqHz / 115200))
+  // io.uart_tx := uartTx.io.tx
+  io.uart_tx := false.B
 
+  core.io.interrupt_in := false.B
   io.success := core.io.success
   io.exit := core.io.exit
   io.debug_pc := core.io.debug_pc
