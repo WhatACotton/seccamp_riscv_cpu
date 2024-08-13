@@ -22,7 +22,7 @@ class Memory extends Module {
     val dmem = new DmemPortIo()
   })
   // メモリの確保・初期化
-  val mem = SyncReadMem(16384, UInt(8.W))
+  val mem = SyncReadMem(16384/4, Vec(4, UInt(8.W)))
   // メモリの読み込み
   loadMemoryFromFile(mem, "src/hex/ctest.hex")
 
