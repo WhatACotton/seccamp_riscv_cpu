@@ -16,7 +16,7 @@ class DmemPortIo extends Bundle {
   val wdata = Input(UInt(WORD_LEN.W))
 }
 
-class Memory extends Module {
+class Memory(memoryPath: Option[Int => String], baseAddress: UInt = "x80000000".U) extends Module {
   val io = IO(new Bundle {
     val imem = new ImemPortIo()
     val dmem = new DmemPortIo()
