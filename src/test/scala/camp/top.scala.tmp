@@ -1,4 +1,4 @@
-package cpu
+package camp
 
 import chiseltest._
 import scala.util.control.Breaks
