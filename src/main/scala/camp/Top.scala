@@ -13,7 +13,7 @@ class Top extends Module {
   // モジュールのインスタンス化
   val core = Module(new Core())
   // メモリのインスタンス化
-  val memory = Module(new Memory())
+  val memory = Module(new Memory(Some(i => f"bootrom_${i}.hex")))
 
   // メモリの接続
   core.io.imem <> memory.io.imem
