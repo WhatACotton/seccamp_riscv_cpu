@@ -9,6 +9,8 @@ class Top extends Module {
     val exit = Output(Bool())
     // デバッグ用
     val gp = Output(UInt(WORD_LEN.W))
+    val success = Output(Bool())
+
   })
   // モジュールのインスタンス化
   val core = Module(new Core())
@@ -21,6 +23,8 @@ class Top extends Module {
 
   // 終了フラグ
   io.exit := core.io.exit
+  io.success := core.io.success
   // デバッグ用
   io.gp := core.io.gp
+
 }

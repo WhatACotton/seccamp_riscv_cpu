@@ -11,6 +11,7 @@ class Core extends Module {
     val dmem = Flipped(new DmemPortIo())
     val exit = Output(Bool())
     val gp = Output(UInt(WORD_LEN.W))
+    val success = Output(Bool())
   })
   // register
   val regfile = Mem(32, UInt(WORD_LEN.W))
@@ -691,6 +692,13 @@ class Core extends Module {
 
   // デバッグ用
   io.gp := regfile(3)
+  val successDetected = RegInit(false.B)
+  successDetected := Mux(
+    if_inst =/= BUBBLE,
+    if_inst === "x00000513".U,
+    successDetected
+  )
+  io.success := successDetected
 
   // デバッグ用の出力
   printf("pc_reg= %x \n", id_pc_reg)
